@@ -3,14 +3,14 @@ import 'package:flutter_api/http/http_client.dart';
 import 'package:flutter_api/repositories/produto_repository.dart';
 import 'package:flutter_api/stores/produto_store.dart';
 
-class HomApp extends StatefulWidget {
-  const HomApp({super.key});
+class HomeApp extends StatefulWidget {
+  const HomeApp({super.key});
 
   @override
-  State<HomApp> createState() => _HomAppState();
+  State<HomeApp> createState() => _HomeAppState();
 }
 
-class _HomAppState extends State<HomApp> {
+class _HomeAppState extends State<HomeApp> {
   final ProdutoStore store = ProdutoStore(
     repository: ProdutoRepository(
       client: HttpClient(),
@@ -20,26 +20,31 @@ class _HomAppState extends State<HomApp> {
   @override
   void initState() {
     super.initState();
-    store.getProsutos();
+    store.getProdutos();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('consumindo api'),
+        backgroundColor: Colors.deepPurple,
+        title: const Text(
+          'Consumo de APIs',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: AnimatedBuilder(
         animation: Listenable.merge([
           store.isLoading,
-          store.state,
           store.erro,
+          store.state,
         ]),
         builder: (context, child) {
           if (store.isLoading.value) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (store.erro.value.isNotEmpty) {
@@ -47,10 +52,11 @@ class _HomAppState extends State<HomApp> {
               child: Text(
                 store.erro.value,
                 style: const TextStyle(
-                  color: Colors.black,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w600,
                   fontSize: 20,
-                  fontWeight: FontWeight.w900,
                 ),
+                textAlign: TextAlign.center,
               ),
             );
           }
@@ -58,24 +64,24 @@ class _HomAppState extends State<HomApp> {
           if (store.state.value.isEmpty) {
             return const Center(
               child: Text(
-                'Não tem nenhum item na Lista',
+                'Nenhum item na lista',
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w600,
                   fontSize: 20,
-                  fontWeight: FontWeight.w900,
                 ),
+                textAlign: TextAlign.center,
               ),
             );
           } else {
             return ListView.separated(
-              separatorBuilder: (context, index) {
-                return const SizedBox(height: 32);
-              },
+              separatorBuilder: (context, index) => const SizedBox(
+                height: 32,
+              ),
               padding: const EdgeInsets.all(16),
               itemCount: store.state.value.length,
               itemBuilder: (_, index) {
                 final item = store.state.value[index];
-
                 return Column(
                   children: [
                     ClipRRect(
@@ -84,7 +90,42 @@ class _HomAppState extends State<HomApp> {
                         item.thumbnail,
                         fit: BoxFit.cover,
                       ),
-                    )
+                    ),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        item.title,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 24,
+                        ),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'R\$ ${item.price}',
+                            style: const TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            item.description,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 18,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 );
               },

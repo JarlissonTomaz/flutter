@@ -23,8 +23,8 @@ class ProdutoModel {
     return ProdutoModel(
       title: map['title'],
       description: map['description'],
-      price: map['price'] * 1,
-      rating: map['rating'] * 1,
+      price: map['price'] * 1.0,
+      rating: map['rating'] * 1.0,
       brand: map['brand'],
       category: map['category'],
       thumbnail: map['thumbnail'],

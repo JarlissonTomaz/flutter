@@ -1,14 +1,12 @@
 import 'dart:convert';
-
-import 'package:flutter_api/http/exceptions.dart';
 import 'package:flutter_api/http/http_client.dart';
 import 'package:flutter_api/models/produto_model.dart';
 
-abstract class IProdutoRepository {
+abstract class IProdutoReposity {
   Future<List<ProdutoModel>> getProdutos();
 }
 
-class ProdutoRepository implements IProdutoRepository {
+class ProdutoRepository implements IProdutoReposity {
   ProdutoRepository({required this.client});
 
   final IHttpClient client;
@@ -33,7 +31,7 @@ class ProdutoRepository implements IProdutoRepository {
 
       return produtos;
     } else if (response.statusCode == 404) {
-      throw NotFoundExecption('A Url informada não é válidas');
+      throw ('A Url informada não é válidas');
     } else {
       throw Exception('Não foi possivel carregar os produtos');
     }

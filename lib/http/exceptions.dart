@@ -1,5 +1,5 @@
-class NotFoundExecption implements Exception {
+class NotFoundException implements Exception {
   final String message;
 
-  NotFoundExecption(this.message);
+  NotFoundException(this.message);
 }
